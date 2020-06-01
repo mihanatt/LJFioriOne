@@ -1,0 +1,133 @@
+<mvc:View
+	controllerName="com.attune.exmsdetail.controller.Detail"
+	xmlns="sap.m"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:layout="sap.ui.layout">
+
+	<semantic:SemanticPage
+		id="detailPage"
+		busy="{detailView>/busy}"
+		busyIndicatorDelay="{detailView>/delay}"
+		>
+		<semantic:titleHeading>
+			<Title
+				text="{i18n>orderId} : {OrderID}"
+				level="H2"/>
+		</semantic:titleHeading>
+		<semantic:headerContent>
+			<layout:HorizontalLayout allowWrapping="true">
+				<layout:VerticalLayout class="sapUiContentPadding">
+					<ObjectAttribute title="{i18n>customerId}" text="{path: 'CustomerID'}"/>
+					<ObjectAttribute title="{i18n>customerName}" text="{CustomerData>/customerName}"/>
+					<ObjectAttribute title="{i18n>employeeName}" text="{EmployeeData>/employeeFullName}"/>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiContentPadding">
+					<ObjectAttribute title="{i18n>orderDate}" text="{path: 'OrderDate', formatter: '.formatter.datePreview'}"/>
+					<ObjectAttribute title="{i18n>requiredDate}" text="{path: 'RequiredDate', formatter: '.formatter.datePreview'}"/>
+					<ObjectAttribute title="{i18n>shippedDate}" text="{path: 'ShippedDate', formatter: '.formatter.datePreview'}"/>
+					<ObjectAttribute title="{i18n>shipAddress}" text="{path: 'ShipAddress'}"/>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiContentPadding">
+					<ObjectAttribute title="{i18n>totalQuantity}" text="{PriceData>/totalQuantity}"/>
+					<ObjectAttribute title="{i18n>totalPrice}" text="{PriceData>/totalPrice}"/>
+				</layout:VerticalLayout>
+			</layout:HorizontalLayout>
+		</semantic:headerContent>
+		<semantic:content>
+			<Table
+				id="lineItemsList"
+				width="auto"
+				items="{Order_Details}"
+				updateFinished=".onListUpdateFinished"
+				noDataText="{i18n>detailLineItemTableNoDataText}"
+				busyIndicatorDelay="{detailView>/lineItemTableDelay}">
+				<headerToolbar>
+					<Toolbar>
+						<Title
+							id="lineItemsTitle"
+							text="{detailView>/lineItemListTitle}"
+							titleStyle="H3"
+							level="H3"/>
+					</Toolbar>
+				</headerToolbar>
+				<columns>
+					<Column>
+						<Text text="{i18n>detailLineItemTableIDColumn}"/>
+					</Column>
+					<Column>
+						<Text text="{i18n>detailLineItemTableProductDescription}"/>
+					</Column>
+					<Column>
+						<Text text="{i18n>detailLineItemTableUnitPrice}"/>
+					</Column>
+					<Column>
+						<Text text="{i18n>detailLineItemTableQuantity}"/>
+					</Column>
+					<Column>
+						<Text text="{i18n>detailLineItemTableDiscount}"/>
+					</Column>
+					<Column>
+						<Text text="{i18n>detailLineItemTableTotalPrice}"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<ObjectIdentifier
+								text="{ProductID}"/>
+							<ObjectIdentifier
+								text="{ProductID}"/>
+							<ObjectNumber
+								number="{
+									path: 'UnitPrice',
+									formatter: '.formatter.currencyValue'
+								}"
+							/>
+							<ObjectNumber
+								number="{
+									path: 'Quantity'
+								}"
+							/>
+							<ObjectNumber
+								number="{
+									path: 'Discount',
+									formatter: '.formatter.currencyValue'
+								}"
+							/>
+							<Text
+								text="{UnitPrice} x {Quantity} - {Discount}" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</semantic:content>
+		<!--Semantic ShareMenu Buttons-->
+		<semantic:sendEmailAction>
+			<semantic:SendEmailAction
+				id="shareEmail"
+				press=".onSendEmailPress"/>
+		</semantic:sendEmailAction>
+
+		<semantic:closeAction>
+			<semantic:CloseAction
+					id="closeColumn"
+					press=".onCloseDetailPress"/>
+		</semantic:closeAction>
+
+		<semantic:fullScreenAction>
+			<semantic:FullScreenAction
+					id="enterFullScreen"
+					visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+					press=".toggleFullScreen"/>
+		</semantic:fullScreenAction>
+		<semantic:exitFullScreenAction>
+			<semantic:ExitFullScreenAction
+					id="exitFullScreen"
+					visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+					press=".toggleFullScreen"/>
+		</semantic:exitFullScreenAction>
+
+	</semantic:SemanticPage>
+
+</mvc:View>
